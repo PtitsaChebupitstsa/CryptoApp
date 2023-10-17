@@ -1,32 +1,48 @@
 package com.example.cryptoapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.cryptoapp.api.ApiFactory
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.schedulers.Schedulers
+import androidx.recyclerview.widget.RecyclerView
+import com.example.cryptoapp.adapters.CoinInfoAdapter
+import com.example.cryptoapp.pojo.CoinPriceInfo
 
-class MainActivity : AppCompatActivity() {
+class CoinPriceListActivity : AppCompatActivity() {
 
-private lateinit var viewModel:CoinViewModel
+    private lateinit var viewModel: CoinViewModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        viewModel= ViewModelProvider(this)[CoinViewModel::class.java]
+        setContentView(R.layout.activity_coin_price_list)
+        val rvCoinPriceList = findViewById<RecyclerView>(R.id.rvCoinPriceList)
+        val adapter = CoinInfoAdapter(this)
+        rvCoinPriceList.adapter = adapter
+        adapter.onCoinClickListener = object : CoinInfoAdapter.OnCoinClickListener {
+            override fun onCoinClick(coinPriceInfo: CoinPriceInfo) {
+                //старт новой активити
+                val intent = CoinDetailActivity.newIntent(
+                    this@CoinPriceListActivity,
+                    coinPriceInfo.fromSymbol
+                )
+                startActivity(intent)
 
-        viewModel.priceList.observe(this, Observer {
-            Log.d("TEST_OF_LOADING_DATA_MAIN_ACT","Success in activity: $it")
-        })
-        viewModel.getDetailInfo("BTC").observe(this, Observer {
-            Log.d("TEST_OF_LOADING_DATA_MAIN_ACT","Success in getDetailInfo: $it")
+            }
+
+        }
+
+        viewModel = ViewModelProvider(this)[CoinViewModel::class.java]
+
+        // Наблюдатель за изменениями в списке монет
+        viewModel.priceList.observe(this, Observer { coinList ->
+            // Обновляем список монет в адаптере, когда данные изменяются
+            adapter.coinInfoList = coinList
         })
 
+        // Вызывайте метод для загрузки данных из ViewModel (например, viewModel.loadCoinList())
     }
 
 }
