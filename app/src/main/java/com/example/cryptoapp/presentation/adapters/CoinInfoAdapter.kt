@@ -1,4 +1,4 @@
-package com.example.cryptoapp.adapters
+package com.example.cryptoapp.presentation.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cryptoapp.R
-import com.example.cryptoapp.pojo.CoinPriceInfo
+import com.example.cryptoapp.data.model.CoinPriceInfo
 import com.squareup.picasso.Picasso
 
 
@@ -19,7 +19,7 @@ class CoinInfoAdapter (private val context:Context): RecyclerView.Adapter<CoinIn
             notifyDataSetChanged()
         }
 
-    var onCoinClickListener:OnCoinClickListener?=null
+    var onCoinClickListener: OnCoinClickListener?=null
     inner class CoinInfoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val ivLogoCoin = itemView.findViewById<ImageView>(R.id.ivLogoCoin)
         val tvSymbols = itemView.findViewById<TextView>(R.id.tvSymbols)
