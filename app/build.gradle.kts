@@ -43,6 +43,12 @@ android {
 
 }
 dependencies {
+
+        implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
+        implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+
+        implementation ("androidx.work:work-runtime-ktx:2.8.1")
+
     // Kotlin
     implementation ("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
 
@@ -66,8 +72,8 @@ dependencies {
     implementation ("com.google.code.gson:gson:2.10.1")
 
     // Room Database
-    implementation ("androidx.room:room-runtime:2.5.2")
-    kapt ("androidx.room:room-compiler:2.5.2")
+    implementation ("androidx.room:room-runtime:2.6.0")
+    kapt ("androidx.room:room-compiler:2.6.0")
     kapt ("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.5.0")
     // AndroidX Core and UI components
     implementation ("androidx.core:core-ktx:1.12.0")
