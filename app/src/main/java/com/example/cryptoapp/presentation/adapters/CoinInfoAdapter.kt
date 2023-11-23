@@ -8,12 +8,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cryptoapp.R
-import com.example.cryptoapp.data.network.model.CoinInfoDto
+import com.example.cryptoapp.data.network.ApiFactory
+import com.example.cryptoapp.domain.CoinInfo
+import com.example.cryptoapp.utils.convertTimestampToTime
 import com.squareup.picasso.Picasso
 
 
 class CoinInfoAdapter (private val context:Context): RecyclerView.Adapter<CoinInfoAdapter.CoinInfoViewHolder>() {
-    var coinInfoList:List<CoinInfoDto> = listOf()
+    var coinInfoList:List<CoinInfo> = listOf()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -46,11 +48,11 @@ class CoinInfoAdapter (private val context:Context): RecyclerView.Adapter<CoinIn
             tvSymbols.text = String.format(symbolsTemplate,coin.fromSymbol,coin.fromSymbol)
             tvPrice.text = coin.price.toString()
 //            tvLastUpdate.text = "Время последнего обновления: ${coin.getFormattedTime()}"
-            tvLastUpdate.text = String.format(lastUpdateTemplate,coin.getFormattedTime())
+            tvLastUpdate.text = String.format(lastUpdateTemplate, convertTimestampToTime(coin.lastUpdate))
 
             Picasso
                 .get()
-                .load(coin.getFullImageUrl())
+                .load(ApiFactory.BASE_IMAGE_URL +coin.imageURL)
                 .into(ivLogoCoin)//пикассо подключаем и скачиваем
 
 
@@ -62,6 +64,6 @@ class CoinInfoAdapter (private val context:Context): RecyclerView.Adapter<CoinIn
     }
 //слушатель нажатия
     interface  OnCoinClickListener{
-        fun onCoinClick(coinPriceInfo: CoinInfoDto)
+        fun onCoinClick(coinPriceInfo: CoinInfo)
     }
 }
