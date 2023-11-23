@@ -6,8 +6,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.example.cryptoapp.data.network.ApiFactory
 import com.example.cryptoapp.data.database.AppDatabase
-import com.example.cryptoapp.data.model.CoinPriceInfo
-import com.example.cryptoapp.data.model.CoinPriceInfoRawData
+import com.example.cryptoapp.data.network.model.CoinInfoDto
+import com.example.cryptoapp.data.network.model.CoinInfoJsonContainerDto
 import com.google.gson.Gson
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -25,7 +25,7 @@ class CoinViewModel(application: Application) : AndroidViewModel(application) {
         loadData()
     }
 
-    fun getDetailInfo(fSym: String): LiveData<CoinPriceInfo> {
+    fun getDetailInfo(fSym: String): LiveData<CoinInfoDto> {
         Log.d("getDetailInfo", fSym)
         Log.d("getDetailInfo_return", db.coinPriceInfoDao().getPriceInfoAboutCoin(fSym).toString())
         return db.coinPriceInfoDao().getPriceInfoAboutCoin(fSym)
@@ -35,7 +35,7 @@ class CoinViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun loadData() {
         val disposable = ApiFactory.apiService.getTopCoinsInfo(limit = 10)
-            .map { it.data?.map { it.coinInfo?.name }?.joinToString(",").toString() }
+            .map { it.names?.map { it.coinNameDto?.name }?.joinToString(",").toString() }
             //joinToString коллекцию строк преврашает в одну стоку и разделяет их сепораторо в нашем случае  ","
             // map преобразуем строку в поле datum и далее мы получаем из датума коин инфо и далее мы получаем имя
             .flatMap { ApiFactory.apiService.getFullPriceList(fSyms = it) }
@@ -56,11 +56,11 @@ class CoinViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    private fun getPriceListRawData(coinPriceInfoRawData: CoinPriceInfoRawData): List<CoinPriceInfo> {//преврашаем обьект преобразованный flatMap лист данных
-        Log.d("getPriceListRawData(coinPriceInfoRawData)", coinPriceInfoRawData.toString())
+    private fun getPriceListRawData(coinInfoJsonContainerDto: CoinInfoJsonContainerDto): List<CoinInfoDto> {//преврашаем обьект преобразованный flatMap лист данных
+        Log.d("getPriceListRawData(coinPriceInfoRawData)", coinInfoJsonContainerDto.toString())
 
-        val result = ArrayList<CoinPriceInfo>()
-        val jsonObject = coinPriceInfoRawData.coinPriceInfoJsonObject ?: return result
+        val result = ArrayList<CoinInfoDto>()
+        val jsonObject = coinInfoJsonContainerDto.json ?: return result
         val coinKeySet = jsonObject.keySet()//получаем набор ключей вложеных в него
 
         Log.d("getPriceListRawData(coinKeySet)", coinKeySet.toString())
@@ -75,7 +75,7 @@ class CoinViewModel(application: Application) : AndroidViewModel(application) {
             for (currencyKey in currencyKeySet) {
                 val priceInfo =
                     Gson().fromJson( // что бы из json получить нужный нам отьект , CoinPriceInfo::class.java класс в который мы хотим сконвертировать
-                        currencyJson.getAsJsonObject(currencyKey), CoinPriceInfo::class.java
+                        currencyJson.getAsJsonObject(currencyKey), CoinInfoDto::class.java
                     )
                 result.add(priceInfo)// результат "TYPE":"5","MARKET":"CCCAGG","FROMSYMBOL":"BTC","TOSYMBOL":"USD","FLAGS":"1","LASTMARKET":"CCCAGG","M
             }

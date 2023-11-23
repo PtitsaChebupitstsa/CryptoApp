@@ -1,5 +1,5 @@
 package com.example.cryptoapp.domain
 
-class GetCoinInfoListUseCase(private val repository: CoinInfoRepository) {
-operator fun invoke()=repository.getCoinItemList()
+class GetCoinInfoListUseCase(private val repository: CoinRepository) {
+operator fun invoke()=repository.getCoinInfoList()
 }
