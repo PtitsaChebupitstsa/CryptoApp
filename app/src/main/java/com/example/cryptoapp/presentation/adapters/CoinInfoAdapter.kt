@@ -8,9 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cryptoapp.R
-import com.example.cryptoapp.data.network.ApiFactory
 import com.example.cryptoapp.domain.CoinInfo
-import com.example.cryptoapp.utils.convertTimestampToTime
 import com.squareup.picasso.Picasso
 
 
@@ -48,11 +46,11 @@ class CoinInfoAdapter (private val context:Context): RecyclerView.Adapter<CoinIn
             tvSymbols.text = String.format(symbolsTemplate,coin.fromSymbol,coin.fromSymbol)
             tvPrice.text = coin.price.toString()
 //            tvLastUpdate.text = "Время последнего обновления: ${coin.getFormattedTime()}"
-            tvLastUpdate.text = String.format(lastUpdateTemplate, convertTimestampToTime(coin.lastUpdate))
+            tvLastUpdate.text = String.format(lastUpdateTemplate, coin.lastUpdate)
 
             Picasso
                 .get()
-                .load(ApiFactory.BASE_IMAGE_URL +coin.imageURL)
+                .load(coin.imageURL)
                 .into(ivLogoCoin)//пикассо подключаем и скачиваем
 
 

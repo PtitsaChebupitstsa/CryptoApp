@@ -2,8 +2,6 @@ package com.example.cryptoapp.data.network.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.cryptoapp.data.network.ApiFactory.BASE_IMAGE_URL
-import com.example.cryptoapp.utils.convertTimestampToTime
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
@@ -156,11 +154,3 @@ data class CoinInfoDto(
     @Expose
     val imageURL: String?
 )
-{
-    fun getFormattedTime():String{// возврат времени в нужном нам формате
-        return convertTimestampToTime(lastUpdate)
-    }
-    fun getFullImageUrl():String{
-        return BASE_IMAGE_URL+imageURL
-    }
-}
