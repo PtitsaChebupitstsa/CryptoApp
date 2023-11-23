@@ -18,6 +18,7 @@ class CoinPriceListActivity : AppCompatActivity() {
         setContentView(binding.root)
         val adapter = CoinInfoAdapter(this)
         binding.rvCoinPriceList.adapter = adapter
+        binding.rvCoinPriceList.itemAnimator = null //убрать анимацию RV
         adapter.onCoinClickListener = object : CoinInfoAdapter.OnCoinClickListener {
             override fun onCoinClick(coinPriceInfo: CoinInfo) {
                 val intent = CoinDetailActivity.newIntent(
@@ -28,8 +29,8 @@ class CoinPriceListActivity : AppCompatActivity() {
             }
         }
         viewModel = ViewModelProvider(this)[CoinViewModel::class.java]
-        viewModel.coinInfoList.observe(this) { coinList ->
-            adapter.coinInfoList = coinList
+        viewModel.coinInfoList.observe(this) {
+            adapter.submitList(it)
         }
     }
 }
