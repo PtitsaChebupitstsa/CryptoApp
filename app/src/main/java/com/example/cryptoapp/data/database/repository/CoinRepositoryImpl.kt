@@ -3,18 +3,17 @@ package com.example.cryptoapp.data.database.repository
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
+import androidx.work.ExistingWorkPolicy
+import androidx.work.WorkManager
 import com.example.cryptoapp.data.database.AppDatabase
-import com.example.cryptoapp.data.network.ApiFactory
+import com.example.cryptoapp.data.workers.RefreshDataWorker
 import com.example.cryptoapp.domain.CoinInfo
 import com.example.cryptoapp.domain.CoinRepository
 import com.example.cryptoapp.mapper.CoinMapper
-import kotlinx.coroutines.delay
 
 
-class CoinRepositoryImpl(application: Application) : CoinRepository {
-
+class CoinRepositoryImpl(private val application: Application) : CoinRepository {
     private val coinInfoDao = AppDatabase.getInstance(application).coinPriceInfoDao()
-    private val apiService = ApiFactory.apiService
     val mapper = CoinMapper()
     override fun getCoinInfoList(): LiveData<List<CoinInfo>> {
         val coinInfoList = coinInfoDao.getPriceList()
@@ -29,20 +28,14 @@ class CoinRepositoryImpl(application: Application) : CoinRepository {
     }
 
 
-    override suspend fun loadData() {
-        while (true) {
-            try {
-                val topCoins = ApiFactory.apiService.getTopCoinsInfo(limit = 50)
-                val fSymb = mapper.mapNamesListToString(topCoins)
-                val jsonContainer = apiService.getFullPriceList(fSyms = fSymb)
-                val coinInfoDtoList = mapper.mapJsonContainerToListCoinInfo(jsonContainer)
-                val dbModelList = coinInfoDtoList.map { mapper.mapDtoToDbModel(it) }
-                coinInfoDao.insertPriceList(dbModelList)
-            } catch (e: Exception) {
+    override fun loadData() {
 
-            }
-            delay(10000)
-        }
+val workManager = WorkManager.getInstance(application)
+        workManager.enqueueUniqueWork(
+            RefreshDataWorker.WORKER_NAME,
+            ExistingWorkPolicy.REPLACE,
+            RefreshDataWorker.makeRequest()
+        )
     }
 }
 
