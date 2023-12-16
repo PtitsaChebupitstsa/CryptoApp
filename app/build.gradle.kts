@@ -45,6 +45,7 @@ android {
     }
 
 }
+
 dependencies {
 
         implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
@@ -52,10 +53,10 @@ dependencies {
 
 
 
-    implementation ("androidx.work:work-runtime-ktx:2.8.1")
+    implementation ("androidx.work:work-runtime-ktx:2.9.0")
 
     // Kotlin
-    implementation ("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
+    implementation ("org.jetbrains.kotlin:kotlin-stdlib:1.9.10")
 
     // RxJava 3
     implementation ("io.reactivex.rxjava3:rxandroid:3.0.2")
@@ -71,24 +72,27 @@ dependencies {
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
 
     // Picasso for image loading
-    implementation ("com.squareup.picasso:picasso:2.8")
+    implementation ("com.squareup.picasso:picasso:2.71828")
 
     // Gson for JSON serialization/deserialization
     implementation ("com.google.code.gson:gson:2.10.1")
 
     // Room Database
-    implementation ("androidx.room:room-runtime:2.6.0")
-    implementation ("androidx.room:room-ktx:2.6.0")
-    kapt ("androidx.room:room-compiler:2.6.0")
+    implementation ("androidx.room:room-runtime:2.6.1")
+    implementation ("androidx.room:room-ktx:2.6.1")
+    kapt ("androidx.room:room-compiler:2.6.1")
     kapt ("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.5.0")
     // AndroidX Core and UI components
     implementation ("androidx.core:core-ktx:1.12.0")
     implementation ("androidx.appcompat:appcompat:1.6.1")
-    implementation ("com.google.android.material:material:1.10.0")
+    implementation ("com.google.android.material:material:1.11.0")
     implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
 
     // Testing dependencies
     testImplementation ("junit:junit:4.13.2")
     androidTestImplementation ("androidx.test.ext:junit:1.1.5")
     androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.1")
+// dagger
+    implementation ("com.google.dagger:dagger:2.49")
+    kapt ("com.google.dagger:dagger-compiler:2.49")
 }
